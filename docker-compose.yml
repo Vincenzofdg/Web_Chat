@@ -1,0 +1,58 @@
+version: "3.7"
+
+services:
+  db:
+    container_name: Database
+    image: mysql:8
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    env_file:
+      - ./.env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - mysql_config:/etc/mysql
+    healthcheck:
+      test: [ "CMD", "curl", "http://localhost:${DB_PORT}" ]
+      timeout: 10s
+      retries: 10
+      
+  backend:
+    container_name: app_backend
+    build: ./backend
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - db
+    env_file:
+      - ./.env
+    ports:
+      - ${BACK_PORT}:${BACK_PORT}
+    environment:
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      HOST_NAME: ${DB_HOST}
+      DB_NAME: ${DB_NAME}
+    healthcheck:
+      test: [ "CMD", "curl", 'http://localhost:${BACK_PORT}' ]
+      timeout: 10s
+      retries: 10
+
+  # frontend:
+  #   container_name: App-Frontend
+  #   build: ./frontend
+  #   volumes:
+  #     - ./frontend:/app
+  #   env_file:
+  #     - ./.env
+  #   depends_on:
+  #     - backend
+  #   ports:
+  #     - ${PORT}:${PORT}
+
+volumes:
+  mysql_data:
+  mysql_config:
