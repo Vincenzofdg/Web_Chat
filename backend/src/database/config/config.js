@@ -3,24 +3,15 @@ const {
   MYSQL_USER,
   DB_NAME,
   HOST_NAME,
-  BACK_PORT,
+  DB_PORT,
 } = process.env;
 
-// const setupConfig = {
-//   username: MYSQL_USER || 'root',
-//   password: MYSQL_PASSWORD || 'password',
-//   database: DB_NAME || 'web_chat',
-//   host: HOST_NAME || 'localhost',
-//   port: Number(BACK_PORT || 3001),
-//   dialect: 'mysql',
-// }
-
 const setupConfig = {
-  username: 'root',
-  password: 'password',
-  database: 'Database',
-  host: 'localhost',
-  port: 3306,
+  username: MYSQL_USER || 'root',
+  password: MYSQL_PASSWORD || 'password',
+  database: DB_NAME || 'web_chat',
+  host: HOST_NAME || 'db',
+  port: Number(DB_PORT || 3306),
   dialect: 'mysql',
 }
 
